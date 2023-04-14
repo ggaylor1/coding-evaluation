@@ -1,25 +1,24 @@
 package com.aa.act.interview.org;
 
 import java.util.Optional;
-//new import
-import java.util.List;
+//new imports
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Organization {
 
 	private Position root;
 	
-	public Organization() {
+
+	protected abstract Position createOrganization();
+
+	//creating a hashmap
+	private Map<String, Position> positions;
+	public Organization(){
+		positions = new HashMap<>();
+		//had to include this down here otherwise would throw a null point execption
 		root = createOrganization();
 	}
-	
-	protected abstract Position createOrganization();
-	//constructor
-	public Organization(List<Position> positions){
-		this.positions = positions;
-	}
-	//giving myself the option to list through different positions
-	private List<Position> positions;
-	
 	/**
 	 * hire the given person as an employee in the position that has that title
 	 * 
@@ -34,27 +33,32 @@ public abstract class Organization {
 		environment variables, which then in turn messed up the terminal on my IDE. I spent awhile fixing that issue by finding the right
 		.exe in my system. After all the settings were fixed, my minimal time turned into even less. I spent more time fixing my settings than
 		I was able to on the code, and wanted to communicate that to whomever is reading this. :)
+
+		EDIT: I was graciously given a little more time to work through this, and with a fresh mind got it to compile and made
+		decent progress compared to my last run. I am so grateful for this opportunity!
 		* */
 
 	public Optional<Position> hire(Name person, String title) {
-
-	//looking for a specific position out of all the positions
-		for(Position p : positions){
-			//using the getTitle function to see if the title is available
-			if(p.getTitle().equals(title) && p.isFilled())
-			{
-				//create that person as a new employee
-				Employee e = new Employee(person, p);
-				employee.add(e);
-				//hire the person for that position
-				p.hire(person);
-				//if Position title exists , return the newly filled position
-				return p;
-				return Optional.of(p);
-			}
+		Position position = positions.get(title);
+		if (position != null && position.isFilled()){
+			Employee employee = new Employee(1, person);
+			position.setEmployee(Optional.of(employee));
+			return Optional.of(position);
 		}
-		//if not, return empty
-		return null;
+		else {
+			return Optional.empty();
+		}
+
+	}
+	//added
+	public void addPosition(Position position){
+		positions.put(position.getTitle(), position);
+	}
+	public Map<String, Position> getPositions() {
+		return positions;
+	}
+	public void setPositions(Map<String, Position> positions){
+		this.positions = positions;
 	}
 
 	@Override
@@ -62,7 +66,7 @@ public abstract class Organization {
 		return printOrganization(root, "");
 	}
 
-	//I chose not to mess with this print statement (although tempting)
+	//I chose not to mess with this print statement
 	private String printOrganization(Position pos, String prefix) {
 		StringBuffer sb = new StringBuffer(prefix + "+-" + pos.toString() + "\n");
 		for(Position p : pos.getDirectReports()) {

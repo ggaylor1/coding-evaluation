@@ -25,19 +25,21 @@ public class Position {
 	}
 	
 	public String getTitle() {
+
 		return title;
 	}
-	
-	public void setEmployee(Optional<Employee> employee) {
-		this.employee = employee;
-	}
-	
+
+	//added
 	public Optional<Employee> getEmployee() {
 		return employee;
 	}
-	
+	//this setter gave me a bit of trouble. it took me awhile to figure out the right type matching but with a little research I found a workaround
+	public <T> void setEmployee(Optional<Employee> employee) {
+		this.employee = employee;
+	}
+	//Changed this to return null if there is a position available
 	public boolean isFilled() {
-		return employee.isPresent();
+		return !employee.isPresent();
 	}
 	
 	public boolean addDirectReport(Position position) {

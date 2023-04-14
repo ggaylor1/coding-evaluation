@@ -19,7 +19,10 @@ public class Employee {
 	public Name getName() {
 		return name;
 	}
-
+	//added setter
+	public void setName(Name name){
+		this.name = name;
+	}
 	@Override
 	public String toString() {
 		return name.toString() + ": " + identifier;
